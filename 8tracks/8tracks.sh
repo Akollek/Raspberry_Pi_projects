@@ -41,7 +41,7 @@ echo "==========================================================================
 echo
 
 # Report that the song was played
-curl "http://8tracks.com/sets/874076615/report.xml?track_id=$TRACK&mix_id=$MIXID&api_key=2256b5ab4f6f92d858c9530bd68900e0d0ff42f6" &
+#curl "http://8tracks.com/sets/874076615/report.xml?track_id=$TRACK&mix_id=$MIXID&api_key=2256b5ab4f6f92d858c9530bd68900e0d0ff42f6" &
 
 for (( c=2; c<=$LENGTH; c++ ))
 do
@@ -65,6 +65,29 @@ echo "==========================================================================
 echo
 
 # Report that the song was played
-curl "http://8tracks.com/sets/874076615/report.xml?track_id=$TRACK&mix_id=$MIXID&api_key=2256b5ab4f6f92d858c9530bd68900e0d0ff42f6" &
+#curl "http://8tracks.com/sets/874076615/report.xml?track_id=$TRACK&mix_id=$MIXID&api_key=2256b5ab4f6f92d858c9530bd68900e0d0ff42f6" &
 done
+
+
+
+echo
+echo
+echo "Playlist over. Save that playlist? (yes=1/no=2)"
+read LIKE
+
+if [ "$LIKE" == 1 ]; then
+	echo $1 >> good\ playlists.txt
+fi
+
+echo
+echo "Play a similar playlists? (yes=1/no=2)"
+read NEXT
+
+if [ "$NEXT" == 1 ]; then
+	curl "http://8tracks.com/sets/111696185/next_mix.json?mix_id=$MIXID&api_key=2256b5ab4f6f92d858c9530bd68900e0d0ff42f6" > next.json
+	python next_mix_parser.py
+	NEW=`cat next_mix`
+	rm next_mix
+	./8tracks.sh $NEW
+fi
 
